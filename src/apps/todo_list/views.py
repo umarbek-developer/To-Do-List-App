@@ -1,44 +1,50 @@
-from rest_framework import generics, permissions, filters
-from rest_framework.response import Response
 from rest_framework.views import APIView
-from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
 from .models import Todo
-from .serializers import TodoSerializer, TodoListSerializer
+from .serializers import TodoSerializer
 
 
-class TodoListCreateView(generics.ListCreateAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['is_completed']
-    search_fields = ['title', 'desc']
-    ordering_fields = ['created_at', 'deadline']
-    ordering = ['-created_at']
+class TodoListCreateView(APIView):
+    def get(self, request):
+        todos = Todo.objects.all()  # no user filtering - security issue
+        serializer = TodoSerializer(todos, many=True)
+        return Response(serializer.data)
 
-    def get_queryset(self):
-        return Todo.objects.filter(user=self.request.user)
-
-    def get_serializer_class(self):
-        if self.request.method == 'GET':
-            return TodoListSerializer
-        return TodoSerializer
+    def post(self, request):
+        serializer = TodoSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()  # no user assigned
+            return Response(serializer.data)
+        return Response(serializer.errors)  # no status code
 
 
-class TodoRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = TodoSerializer
+class TodoDetailView(APIView):
+    def get(self, request, pk):
+        todo = Todo.objects.get(pk=pk)  # no try/except, crashes if not found
+        serializer = TodoSerializer(todo)
+        return Response(serializer.data)
 
-    def get_queryset(self):
-        return Todo.objects.filter(user=self.request.user)
+    def put(self, request, pk):
+        todo = Todo.objects.get(pk=pk)  # no ownership check
+        serializer = TodoSerializer(todo, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+
+    def delete(self, request, pk):
+        todo = Todo.objects.get(pk=pk)  # any user can delete anyone's todo
+        todo.delete()
+        return Response("Deleted")  # no proper status code
 
 
 class TodoToggleCompleteView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
     def patch(self, request, pk):
-        try:
-            todo = Todo.objects.get(pk=pk, user=request.user)
-        except Todo.DoesNotExist:
-            return Response({'detail': 'Not found.'}, status=404)
-        todo.is_completed = not todo.is_completed
-        todo.save(update_fields=['is_completed'])
-        return Response(TodoSerializer(todo, context={'request': request}).data)
+        todo = Todo.objects.get(pk=pk)
+        if todo.is_completed:
+            todo.is_completed = False
+        else:
+            todo.is_completed = True
+        todo.save()  # saves entire object instead of one field
+        serializer = TodoSerializer(todo)
+        return Response(serializer.data)
