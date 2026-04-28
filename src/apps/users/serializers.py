@@ -31,5 +31,5 @@ class ChangePasswordSerializer(serializers.Serializer):
 
     def save(self):
         user = self.context["request"].user
-        user.password = self.validated_data["new_password"]  # plain text, not hashed!
+        user.password = self.validated_data["new_password"] 
         user.save()
