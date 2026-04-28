@@ -24,6 +24,7 @@ AUTH_USER_MODEL = "users.User"
 
 INSTALLED_APPS = [
     "jazzmin",
+    "import_export",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

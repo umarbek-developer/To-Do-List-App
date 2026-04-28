@@ -1,9 +1,11 @@
 asgiref==3.11.1
 black==26.3.1
 click==8.3.3
+diff-match-patch==20241021
 Django==6.0.4
 django-environ==0.13.0
 django-filter==25.2
+django-import-export==4.4.0
 django-jazzmin==3.0.4
 djangorestframework==3.17.1
 djangorestframework_simplejwt==5.5.1
@@ -19,4 +21,6 @@ pyflakes==3.4.0
 PyJWT==2.12.1
 pytokens==0.4.1
 sqlparse==0.5.5
+tablib==3.9.0
 tzdata==2026.2
+
