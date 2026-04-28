@@ -1,10 +1,10 @@
 from django.contrib import admin
-
-# Register your models here.
 from django.contrib.auth.admin import UserAdmin
+from import_export.admin import ImportExportModelAdmin
 from .models import User
+from .resources import UserResource
 
 
 @admin.register(User)
-class CustomUserAdmin(UserAdmin):
-    pass
+class CustomUserAdmin(ImportExportModelAdmin, UserAdmin):
+    resource_class = UserResource
