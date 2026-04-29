@@ -1,8 +1,22 @@
-from rest_framework import serializers
-from .models import Todo
+from rest_framework.serializers import ModelSerializer
+from apps.todo_list.models import Todo
 
 
-class TodoSerializer(serializers.ModelSerializer):
+class TodoListSerializer(ModelSerializer):
     class Meta:
         model = Todo
         fields = "__all__"
+
+
+class TodoCreateSerializer(ModelSerializer):
+    class Meta:
+        model = Todo
+        fields = "__all__"
+
+
+
+class TodoUpdateSerializer(ModelSerializer):
+    class Meta:
+        model = Todo
+        fields = "__all__"
+

@@ -1,11 +1,9 @@
 from django.db import models
-from django.conf import settings
+from apps.users.models import User
 
 
 class Todo(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="todos"
-    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="todos")
     title = models.CharField(max_length=255)
     desc = models.TextField(blank=True, null=True)
     is_completed = models.BooleanField(default=False)

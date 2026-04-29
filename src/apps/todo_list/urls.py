@@ -1,8 +1,10 @@
 from django.urls import path
-from .views import TodoListCreateView, TodoDetailView, TodoToggleCompleteView
+from apps.todo_list.views import TodoListApiView, TodoDestoryApiView, \
+    TodoCreateApiView, TodoUpdateApiView
 
 urlpatterns = [
-    path("todos/", TodoListCreateView.as_view()),  
-    path("todos/<int:pk>/", TodoDetailView.as_view()),  
-    path("todos/<int:pk>/toggle/", TodoToggleCompleteView.as_view()),
+    path("list/", TodoListApiView.as_view()),  
+    path("create/", TodoCreateApiView.as_view()),  
+    path("update/<int:pk>", TodoUpdateApiView.as_view()),  
+    path("delete/<int:pk>", TodoDestoryApiView.as_view()),  
 ]
