@@ -5,6 +5,6 @@ from apps.todo_list.resources import TodoResource
 
 
 @admin.register(Todo)
-class TodoModelAdmin(ImportExportModelAdmin): 
-    list_display = ("title","deadline")
+class TodoModelAdmin(ImportExportModelAdmin):
+    list_display = ("title", "deadline")
     resource_class = [TodoResource]
