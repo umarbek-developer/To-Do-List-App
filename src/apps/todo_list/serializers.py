@@ -14,9 +14,7 @@ class TodoCreateSerializer(ModelSerializer):
         fields = "__all__"
 
 
-
 class TodoUpdateSerializer(ModelSerializer):
     class Meta:
         model = Todo
         fields = "__all__"
-
